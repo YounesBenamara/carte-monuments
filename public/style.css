@@ -1,0 +1,1075 @@
+/* =============================================
+   Ma Carte des Monuments — Feuille de styles
+   
+   Palette principale :
+   - Bleu principal : #185FA5
+   - Bleu foncé :    #0F3D6B
+   - Bleu clair :    #E8F0FE
+   - Fond :          #F5F7FA
+   - Texte :         #1A1A2E
+   - Gris :          #6B7280
+   
+   Couleurs des catégories :
+   - Musée :           #2563EB (bleu)
+   - Monument :        #D97706 (orange/amber)
+   - Site historique :  #059669 (vert)
+   - Autre :           #6B7280 (gris)
+   ============================================= */
+
+/* --- Reset & base --- */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #185FA5;
+    --primary-dark: #0F3D6B;
+    --primary-light: #E8F0FE;
+    --bg: #F5F7FA;
+    --bg-white: #FFFFFF;
+    --text: #1A1A2E;
+    --text-secondary: #6B7280;
+    --border: #E5E7EB;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.12), 0 4px 10px rgba(0,0,0,0.08);
+    --radius: 10px;
+    --radius-sm: 6px;
+    --transition: 0.2s ease;
+
+    /* Couleurs des catégories */
+    --color-musee: #2563EB;
+    --color-monument: #D97706;
+    --color-site: #059669;
+    --color-autre: #6B7280;
+
+    --sidebar-width: 360px;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    overflow: hidden;
+}
+
+/* --- Layout principal --- */
+body {
+    display: flex;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--bg-white);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.04);
+}
+
+.sidebar-header {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    color: white;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.logo-icon {
+    font-size: 28px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.logo h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+.compteur {
+    font-size: 13px;
+    opacity: 0.85;
+    font-weight: 400;
+}
+
+/* --- Filtres --- */
+.filtres {
+    padding: 14px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-bottom: 1px solid var(--border);
+}
+
+.filtre-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--bg-white);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+}
+
+.filtre-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+.filtre-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot-musee { background: var(--color-musee); }
+.dot-monument { background: var(--color-monument); }
+.dot-site { background: var(--color-site); }
+.dot-autre { background: var(--color-autre); }
+
+/* --- Bouton ajouter --- */
+.btn-ajouter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 14px 16px;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    box-shadow: 0 2px 8px rgba(24, 95, 165, 0.3);
+}
+
+.btn-ajouter:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(24, 95, 165, 0.4);
+}
+
+.btn-ajouter span {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* --- Liste des lieux --- */
+.liste-lieux {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+}
+
+.liste-lieux::-webkit-scrollbar {
+    width: 5px;
+}
+.liste-lieux::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+}
+
+.lieu-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    margin-bottom: 6px;
+    background: var(--bg);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all var(--transition);
+    border: 1px solid transparent;
+    position: relative;
+}
+
+.lieu-card:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    transform: translateX(2px);
+}
+
+.lieu-card-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.lieu-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.lieu-card-name {
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--text);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lieu-card-meta {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.lieu-card-category {
+    font-weight: 500;
+}
+
+.lieu-card-delete {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    opacity: 0;
+    transition: all var(--transition);
+}
+
+.lieu-card-edit {
+    position: absolute;
+    top: 8px;
+    right: 36px;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    opacity: 0;
+    transition: all var(--transition);
+}
+
+.lieu-card:hover .lieu-card-delete,
+.lieu-card:hover .lieu-card-edit {
+    opacity: 1;
+}
+
+.lieu-card-delete:hover {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.lieu-card-edit:hover {
+    background: #E0E7FF;
+    color: #4338CA;
+}
+
+/* Placeholder vide */
+.liste-vide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    text-align: center;
+    gap: 10px;
+}
+
+.liste-vide-icon {
+    font-size: 48px;
+    opacity: 0.4;
+}
+
+.liste-vide-text {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* --- CARTE --- */
+.map-container {
+    flex: 1;
+    position: relative;
+    height: 100vh;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+.map-hint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 61, 107, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 12.5px;
+    font-weight: 500;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-lg);
+    pointer-events: none;
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* --- Popup Leaflet personnalisée --- */
+.leaflet-popup-content-wrapper {
+    border-radius: var(--radius) !important;
+    box-shadow: var(--shadow-lg) !important;
+    padding: 0 !important;
+}
+
+.leaflet-popup-content {
+    margin: 0 !important;
+    min-width: 260px;
+    max-width: 300px;
+}
+
+.popup-content {
+    padding: 0;
+}
+
+.popup-photo {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: var(--radius) var(--radius) 0 0;
+    display: block;
+}
+
+.popup-body {
+    padding: 14px 16px;
+}
+
+.popup-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.popup-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 8px;
+}
+
+.popup-badge-musee { background: var(--color-musee); }
+.popup-badge-monument { background: var(--color-monument); }
+.popup-badge-site { background: var(--color-site); }
+.popup-badge-autre { background: var(--color-autre); }
+
+.popup-date {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.popup-note {
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.5;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    margin-top: 4px;
+}
+
+/* Pin de recherche indépendant des visites enregistrées. */
+.search-marker svg {
+    display: block;
+    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.3));
+}
+
+.popup-locality {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.popup-search-add {
+    width: 100%;
+    padding: 9px 12px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--primary);
+    color: white;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.popup-already-saved {
+    margin-bottom: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-site);
+}
+
+.popup-search-add:hover {
+    background: var(--primary-dark);
+}
+
+/* --- MODALE --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+}
+
+.modal-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background: var(--bg-white);
+    border-radius: 14px;
+    width: 90%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: modalIn 0.3s ease;
+}
+
+@keyframes modalIn {
+    from { transform: scale(0.95) translateY(10px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.btn-fermer {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--bg);
+    color: var(--text-secondary);
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+}
+
+.btn-fermer:hover {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+/* --- Formulaire --- */
+.form-lieu {
+    padding: 20px 24px 24px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-row {
+    display: flex;
+    gap: 12px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.requis {
+    color: #DC2626;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--bg-white);
+    transition: border-color var(--transition), box-shadow var(--transition);
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(24, 95, 165, 0.12);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+/* Trois colonnes pour choisir la date sans calendrier. */
+.date-visite {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 8px;
+}
+
+.date-visite select {
+    min-width: 0;
+    padding: 10px 8px;
+}
+
+.date-visite-aide {
+    margin-top: 6px;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Zone d'upload photo */
+.upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all var(--transition);
+    overflow: hidden;
+}
+
+.upload-zone:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 24px;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.upload-icon {
+    font-size: 28px;
+}
+
+.upload-hint {
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.upload-preview {
+    display: none;
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.upload-preview.visible {
+    display: block;
+}
+
+/* Bouton soumettre */
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 14.5px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(24, 95, 165, 0.3);
+    margin-top: 8px;
+}
+
+.btn-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(24, 95, 165, 0.4);
+}
+
+/* --- Modale de confirmation --- */
+.modal-confirm {
+    max-width: 400px;
+}
+
+.confirm-text {
+    padding: 20px 24px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 10px;
+    padding: 0 24px 24px;
+    justify-content: flex-end;
+}
+
+.btn-cancel {
+    padding: 10px 20px;
+    border: 1px solid var(--border);
+    background: var(--bg-white);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.btn-cancel:hover {
+    background: var(--bg);
+}
+
+.btn-danger {
+    padding: 10px 20px;
+    border: none;
+    background: #DC2626;
+    color: white;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.btn-danger:hover {
+    background: #B91C1C;
+}
+
+/* --- Icônes marqueurs personnalisés (SVG inline) --- */
+/* Gérés en JS via L.divIcon */
+
+/* --- Toast notification --- */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--primary-dark);
+    color: white;
+    padding: 14px 22px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 3000;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toast.visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* --- Barre de recherche sur la carte (style Google Maps) --- */
+.map-search {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    width: 420px;
+    max-width: calc(100% - 32px);
+}
+
+.map-search-wrapper {
+    display: flex;
+    align-items: center;
+    background: var(--bg-white);
+    border-radius: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.04);
+    padding: 0 6px 0 16px;
+    transition: box-shadow var(--transition);
+}
+
+.map-search-wrapper:focus-within {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 0 0 2px var(--primary);
+}
+
+.map-search-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    opacity: 0.5;
+}
+
+.map-search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 12px 10px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    min-width: 0;
+}
+
+.map-search-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.map-search-clear {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+    flex-shrink: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.map-search-clear.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.map-search-clear:hover {
+    background: var(--bg);
+}
+
+/* --- Résultats de recherche (dropdown) --- */
+.search-results {
+    background: var(--bg-white);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.14);
+    margin-top: 6px;
+    overflow: hidden;
+    max-height: 320px;
+    overflow-y: auto;
+    display: none;
+}
+
+.search-results.visible {
+    display: block;
+    animation: fadeInDown 0.15s ease;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.search-result-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background var(--transition);
+    border-bottom: 1px solid var(--border);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background: var(--primary-light);
+}
+
+.search-result-icon {
+    font-size: 18px;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+.search-result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-result-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-result-address {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-no-results {
+    padding: 20px 16px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+/* --- Champ de recherche dans la modale --- */
+.search-field-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    background: var(--bg-white);
+}
+
+.search-field-wrapper:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(24, 95, 165, 0.12);
+}
+
+.search-field-icon {
+    font-size: 14px;
+    opacity: 0.4;
+    flex-shrink: 0;
+}
+
+.search-field-wrapper input {
+    flex: 1;
+    border: none !important;
+    background: transparent !important;
+    padding: 10px 8px !important;
+    font-size: 13.5px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    box-shadow: none !important;
+}
+
+.search-results-modal {
+    position: relative;
+    margin-top: 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    border: 1px solid var(--border);
+}
+
+/* Spinner de chargement */
+.search-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    display: none;
+    flex-shrink: 0;
+}
+
+.search-spinner.visible {
+    display: block;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* --- Lieu sélectionné (confirmation dans la modale) --- */
+.lieu-selectionne {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #F0FDF4;
+    border: 1.5px solid #BBF7D0;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    animation: fadeInDown 0.2s ease;
+}
+
+.lieu-selectionne-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+}
+
+.lieu-selectionne-info > div {
+    flex: 1;
+    min-width: 0;
+}
+
+.lieu-selectionne-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.lieu-selectionne-nom {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lieu-selectionne-adresse {
+    font-size: 11px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-changer-lieu {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    background: var(--bg-white);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    flex-shrink: 0;
+}
+
+.btn-changer-lieu:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+/* --- Responsive basique --- */
+@media (max-width: 768px) {
+    :root {
+        --sidebar-width: 100%;
+    }
+    body {
+        flex-direction: column;
+    }
+    .sidebar {
+        height: 40vh;
+        min-width: 100%;
+    }
+    .map-container {
+        height: 60vh;
+    }
+    .map-search {
+        width: calc(100% - 24px);
+    }
+}

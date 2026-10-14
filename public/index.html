@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Carte des Monuments</title>
+    <meta name="description" content="Application locale pour suivre les musées et monuments historiques visités">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Style de l'app -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ====== SIDEBAR GAUCHE ====== -->
+    <aside id="sidebar" class="sidebar">
+        <!-- En-tête sidebar -->
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">🏛️</span>
+                <h1>Mes Monuments</h1>
+            </div>
+            <div id="compteur" class="compteur">0 lieu visité</div>
+        </div>
+
+        <!-- Filtres par catégorie -->
+        <div class="filtres">
+            <button class="filtre-btn active" data-category="all">Tous</button>
+            <button class="filtre-btn" data-category="Musée">
+                <span class="dot dot-musee"></span>Musées
+            </button>
+            <button class="filtre-btn" data-category="Monument">
+                <span class="dot dot-monument"></span>Monuments
+            </button>
+            <button class="filtre-btn" data-category="Site historique">
+                <span class="dot dot-site"></span>Sites hist.
+            </button>
+            <button class="filtre-btn" data-category="Autre">
+                <span class="dot dot-autre"></span>Autre
+            </button>
+        </div>
+
+        <!-- Bouton d'ajout -->
+        <button id="btn-ajouter" class="btn-ajouter">
+            <span>+</span> Ajouter un lieu
+        </button>
+
+        <!-- Liste des lieux -->
+        <div id="liste-lieux" class="liste-lieux"></div>
+    </aside>
+
+    <!-- ====== CARTE ====== -->
+    <main id="map-container" class="map-container">
+        <div id="map"></div>
+        <!-- Barre de recherche sur la carte (style Google Maps) -->
+        <div class="map-search">
+            <div class="map-search-wrapper">
+                <span class="map-search-icon">🔍</span>
+                <input type="text" id="map-search-input" class="map-search-input" placeholder="Rechercher un lieu, une adresse..." autocomplete="off">
+                <button id="map-search-clear" class="map-search-clear" title="Effacer">✕</button>
+            </div>
+            <div id="map-search-results" class="search-results"></div>
+        </div>
+        <!-- Indicateur clic droit -->
+        <div class="map-hint">
+            <span>💡</span> Clic droit sur la carte pour placer un marqueur
+        </div>
+    </main>
+
+    <!-- ====== MODALE D'AJOUT ====== -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">Ajouter un lieu</h2>
+                <button id="btn-fermer-modal" class="btn-fermer">&times;</button>
+            </div>
+            <form id="form-lieu" class="form-lieu">
+                <!-- Recherche d'adresse (remplace lat/lon manuels) -->
+                <div class="form-group">
+                    <label for="input-recherche">Rechercher un lieu <span class="requis">*</span></label>
+                    <div class="search-field-wrapper">
+                        <span class="search-field-icon">🔍</span>
+                        <input type="text" id="input-recherche" placeholder="Tapez un nom, une adresse..." autocomplete="off">
+                        <span id="search-spinner" class="search-spinner"></span>
+                    </div>
+                    <div id="modal-search-results" class="search-results search-results-modal"></div>
+                </div>
+                <!-- Lieu sélectionné (affiché après sélection) -->
+                <div id="lieu-selectionne" class="lieu-selectionne" style="display:none">
+                    <div class="lieu-selectionne-info">
+                        <span class="lieu-selectionne-icon">📍</span>
+                        <div>
+                            <div id="lieu-selectionne-nom" class="lieu-selectionne-nom"></div>
+                            <div id="lieu-selectionne-adresse" class="lieu-selectionne-adresse"></div>
+                        </div>
+                    </div>
+                    <button type="button" id="btn-changer-lieu" class="btn-changer-lieu">Changer</button>
+                </div>
+                <!-- Champs cachés pour l'édition et les coordonnées -->
+                <input type="hidden" id="input-id">
+                <input type="hidden" id="input-lat">
+                <input type="hidden" id="input-lon">
+
+                <div class="form-group">
+                    <label for="input-nom">Nom du lieu <span class="requis">*</span></label>
+                    <input type="text" id="input-nom" placeholder="Ex : Musée du Louvre" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="input-categorie">Catégorie</label>
+                        <select id="input-categorie">
+                            <option value="Musée">🔵 Musée</option>
+                            <option value="Monument">🟠 Monument</option>
+                            <option value="Site historique">🟢 Site historique</option>
+                            <option value="Autre">⚪ Autre</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label id="label-date-visite">Date de visite</label>
+                    <div class="date-visite" role="group" aria-labelledby="label-date-visite" aria-describedby="date-visite-aide">
+                        <select id="input-jour" aria-label="Jour de visite">
+                            <option value="">Jour</option>
+                        </select>
+                        <select id="input-mois" aria-label="Mois de visite">
+                            <option value="">Mois</option>
+                        </select>
+                        <select id="input-annee" aria-label="Année de visite">
+                            <option value="">Année</option>
+                        </select>
+                    </div>
+                    <p id="date-visite-aide" class="date-visite-aide">Tu peux laisser le jour vide si tu ne te souviens que du mois.</p>
+                </div>
+                <div class="form-group">
+                    <label for="input-note">Note / souvenir</label>
+                    <textarea id="input-note" rows="3" placeholder="Vos impressions, anecdotes..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="input-photo">Photo</label>
+                    <div class="upload-zone" id="upload-zone">
+                        <input type="file" id="input-photo" accept="image/*" hidden>
+                        <div id="upload-placeholder" class="upload-placeholder">
+                            <span class="upload-icon">📷</span>
+                            <span>Cliquez pour choisir une photo</span>
+                            <span class="upload-hint">JPG, PNG, GIF, WebP — max 10 Mo</span>
+                        </div>
+                        <img id="upload-preview" class="upload-preview" alt="Aperçu">
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <span>📍</span> Enregistrer ce lieu
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ====== MODALE DE CONFIRMATION SUPPRESSION ====== -->
+    <div id="modal-confirm" class="modal-overlay">
+        <div class="modal modal-confirm">
+            <div class="modal-header">
+                <h2>Confirmer la suppression</h2>
+                <button id="btn-fermer-confirm" class="btn-fermer">&times;</button>
+            </div>
+            <p id="confirm-text" class="confirm-text">Voulez-vous vraiment supprimer ce lieu ?</p>
+            <div class="confirm-actions">
+                <button id="btn-annuler-suppression" class="btn-cancel">Annuler</button>
+                <button id="btn-confirmer-suppression" class="btn-danger">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- App JS -->
+    <script src="app.js"></script>
+</body>
+</html>

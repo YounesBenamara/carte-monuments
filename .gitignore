@@ -1,0 +1,19 @@
+# Dépendances installées localement
+node_modules/
+
+# Visites et photos personnelles
+data/monuments.json
+data/photos/*
+!data/photos/.gitkeep
+
+# Secrets et réglages locaux
+.env
+.env.*
+!.env.example
+.codex/
+.agents/
+
+# Fichiers temporaires
+*.log
+.DS_Store
+Thumbs.db
